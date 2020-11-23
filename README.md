@@ -15,10 +15,14 @@ by the [Financial Times](https://www.ft.com) and available
 [here](https://github.com/Financial-Times/coronavirus-excess-mortality-data). The dataset
 is in a CSV file called `ft_excess_deaths.csv`.
 
-2. Public health expenditure (%GDP) data available through the data portal
-[Our World in Data](https://ourworldindata.org)
-[here](https://ourworldindata.org/grapher/public-health-expenditure-share-gdp-owid).
-Use the link `Download` to download a CSV file with the data.
+2. Public health expenditure (%GDP) data reported by the
+[Organisation for Economic Co-operation and Developmend (OECD)](https://www.oecd.org)
+and available
+[here](https://data.oecd.org/healthres/health-spending.htm). To download the
+dataset follow these three steps: (1) select the desired countries in the pull-down
+menu `Highlighted Countries`; (2) select the time lapse and frequency in the time
+section; and (3) click on the pull-down menu `download' and click on
+`Selected data only (.csv)`.
 
 ## Deliverables
 
