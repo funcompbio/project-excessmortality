@@ -56,15 +56,20 @@ made readily reproducible using a Makefile.
 
 The rubric to evaluate this project consists of the following items:
 
-* Does the GitHub repo contains at least a `.Rmd` file and a `.html` file corresponding
-to the source R Markdown and the resulting HTML?
+* Does the GitHub repo contain at least the analysed CSV files along with the
+  `index.Rmd` file and the resulting `index.html`?
 
-* Does the R Markdown file `.Rmd` run the analysis without errors and generates the expected HTML file?
+* Does the R Markdown file `index.Rmd` run the analysis without errors and
+  generates the expected `index.html` file?
 
-* Does the analysis described in the resulting HTML file conforms to the requested sectioning.
+* Does the analysis described in the resulting `index.html` file conform to
+  the requested sectioning.
 
-* Does the introduction explain clearly what is the question addressed, the data employed and the number of observations and variables involved?
+* Does the introduction explain clearly what is the question addressed, the
+  data employed and the number of observations and variables involved?
 
-* Do the plots show some meaningful summary of the data? Are axes in plots labeled in plain language and large enough to read?
+* Do the plots show some meaningful summary of the data? Are axes in plots
+  labeled in plain language and large enough to read?
 
-* Does the GitHub repo include a Makefile that automatizes the entire analysis pipeline and generation of the final HTML report?
+* Does the GitHub repo include a _Makefile_ that automatizes the entire analysis
+  pipeline and generation of the final report in the `index.html` file?
