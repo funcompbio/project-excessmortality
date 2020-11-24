@@ -33,6 +33,7 @@ The GitHub repo for this project should contain, at least, the following files:
   * `index.html`: Resulting HTML output from processing (_knitting_) the file
     `index.Rmd`.
   * The CSV files employed during the analysis.
+  * This `README.md` file.
 
 The analysis of the data described in the HTML file should contain the following
 sections:
@@ -59,6 +60,8 @@ made readily reproducible using a Makefile.
 ## Evaluation rubric
 
 The rubric to evaluate this project consists of the following items:
+
+* Have all members of the group made a sizeable number of commits to the GitHub repo?
 
 * Does the GitHub repo contain at least the analysed CSV files along with the
   `index.Rmd` file and the resulting `index.html`?
