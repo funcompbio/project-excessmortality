@@ -1,0 +1,39 @@
+name: FCB-project-autograding
+
+on: [push]
+
+jobs:
+  build:
+    name: autograding
+    runs-on: macOS-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        r-version: [4.1]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up R ${{ matrix.r-version }}
+        uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: ${{ matrix.r-version }}
+      - name: Set up pandoc
+        uses: r-lib/actions/setup-pandoc@v1
+      - name: Install development packages
+        run: Rscript -e 'install.packages(c("remotes", "rprojroot", "renv", "desc", "rmarkdown", "knitr"))'
+      - name: Install package dependencies
+        run: Rscript -e 'pkg_deps <- renv::dependencies()$Package ; missing_pkgs <- setdiff(pkg_deps, rownames(installed.packages())) ; if (length(missing_pkgs) > 0) install.packages(missing_pkgs)'
+      - name: Check for index.Rmd
+        run: RED='\033[0;31m'; NC='\033[0m' ; if [ -e index.Rmd ] ; then exit 0 ; else { echo -e "${RED}MISSING FILE index.Rmd${NC}" ; exit 1 ; } ; fi
+      - name: Check for index.html
+        run: RED='\033[0;31m'; NC='\033[0m' ; if [ -e index.Rmd ] || [ -e docs/index.html ] ; then exit 0 ; else { echo -e "${RED}MISSING FILE index.html${NC}" ; exit 1 ; } ; fi
+      - name: Check for setwd() in index.Rmd
+        run: RED='\033[0;31m'; NC='\033[0m' ; nlswd=`grep -n setwd index.Rmd | cut -d ':' -f 1` ; if [ $nlswd -gt 0 ] ; then { echo -e "${RED}YOU ARE CALLING setwd IN LINE $nlswd PLEASE DO NOT DO IT${NC}" ; exit 1 ; } ; else { exit 0 ; } ; fi
+      - name: Render index.html
+        run: if [ -e Makefile ] ; then { echo Makefile found, touching prerequisites ; grep '^[^#[:space:]].*:' Makefile | sed 's/^[^#[:space:]].*:[[:space:]]*//' | sed 's/ /\'$'\n/g' | egrep '\.R|\.Rmd|\.py|\.sh' | xargs touch ; echo Running Makefile ; make ; } ; else { if [ -e _site.yml ] ; then { Rscript -e 'rmarkdown::render_site()' ; } ; else { Rscript -e 'rmarkdown::render("index.Rmd")' ; } ; fi ; } ; fi
+      - name: Commit results to GitHub repo
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add . || echo "No changes to stage."
+          git commit -m 'Re-build index.html' || echo "No changes to commit."
+          if [ -e .push ] ; then { git push || echo "No changes to push." ; exit 0 ; } else { echo "No pushing of index.html b/c no .push file in the repo." ; exit 0 ; } ; fi
