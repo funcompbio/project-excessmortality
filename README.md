@@ -1,6 +1,6 @@
 [![FCB-project-autograding](../../actions/workflows/fcb_autograding.yml/badge.svg)](../../actions?query=workflow%3AFCB-project-autograding)
 
-# Project excess mortality - FCB 2021
+# Project excess mortality and public health expenditure - FCB 2021
 
 ## Summary
 
