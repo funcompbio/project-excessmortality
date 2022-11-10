@@ -1,6 +1,6 @@
 [![FCB-project-autograding](../../actions/workflows/fcb_autograding.yml/badge.svg)](../../actions?query=workflow%3AFCB-project-autograding)
 
-# Project excess mortality and public health expenditure - FCB 2021
+# Project excess mortality and public health expenditure - FCB 2022
 
 ## Summary
 
@@ -33,17 +33,20 @@ The GitHub repo for this project should contain, at least, the following files:
   * `index.Rmd`: R Markdown script with the R code doing the analysis of the data
     and the corresponding text explaining those analysis steps.
   * `index.html`: Resulting HTML output from processing (_knitting_) the file
-    `index.Rmd`. This file may also be located in a subdirectory called
-    `docs`, when publishing it with GitHub pages.
+    `index.Rmd`. This file (`index.html`) and other web-related files may also be
+    located in a subdirectory called `docs`, when publishing it with GitHub pages,
+    but this `docs` subdirectory **cannot** have `.R` or `.Rmd` files.
   * The CSV files employed during the analysis.
   * This `README.md` file.
 
+Object names in the R code in `.Rmd` and `.R` files **should not** contain
+non-english characters such as `ç` or `ñ` or accents such as `à`, `é`, etc.
 The analysis of the data described in the HTML file should contain the following
 sections:
 
   * **Front matter:** This is the basic information of the project that should
     appear at the beginning and should consist of the following items: title of
-    the project including at the end or as subtitle "FCB 2021", names of the
+    the project including at the end or as subtitle "FCB 2022", names of the
     authors and date. Here the words _Front Matter_ **should not** be included
     as section name.
   * **Abstract:** Summary of the question and the findings (max. 200 words).
@@ -65,11 +68,28 @@ analysis with R. If those prior steps using shell or Python scripts are
 included, they should be described in the introduction section of the R
 Markdown document and, ideally, made readily reproducible using a Makefile.
 
+## Submission procedure
+
+This assignment has to be submitted using GitHub Classroom. This
+means that you should have cloned the GitHub repo of this assignment from
+the organization account for FCB in the academic year 2022-23 at
+[https://github.com/funcompbio2022](https://github.com/funcompbio2022)
+using the submission link provided at the FCB Moodle site.
+
+To complete your submission (see rubric below) one team member should fill up a
+Google form provided at the FCB Moodle site before the deadline and **agree to
+the following academic integrity statement**, by editing this README file and
+placing the letter `X` between the squared brackets preceding the statement:
+
+- [] The work here submitted has been entirely developed by the members of
+  our team and it is the result of our own work.
+
 ## Evaluation rubric
 
 The rubric to evaluate this project consists of the following items:
 
-1. Have all members of the group made a sizeable number of commits to the
+1. Have all members of the group agreed to the academic integrity statement?
+   Have all members of the group made a sizeable number of commits to the
    GitHub repo?
 
 2. Does the GitHub repo contain at least the analysed CSV files along with the
