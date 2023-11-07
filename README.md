@@ -4,7 +4,8 @@
 
 ## Summary
 
-In this project you should analyse data to attempt answering the following question:
+In this project you should analyse data to attempt answering the following
+question:
 
 > Is public health expenditure (%GDP) associated with the excess mortality rate observed during the COVID19 pandemic?
 
