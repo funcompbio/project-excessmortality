@@ -1,6 +1,6 @@
 [![FCB-project-autograding](../../actions/workflows/fcb_autograding.yml/badge.svg)](../../actions?query=workflow%3AFCB-project-autograding)
 
-# Project excess mortality and public health expenditure - FCB 2022
+# Project excess mortality and public health expenditure - FCB 2023
 
 ## Summary
 
@@ -46,14 +46,14 @@ sections:
 
   * **Front matter:** This is the basic information of the project that should
     appear at the beginning and should consist of the following items: title of
-    the project including at the end or as subtitle "FCB 2022", names of the
+    the project including at the end or as subtitle "FCB 2023", names of the
     authors and date. Here the words _Front Matter_ **should not** be included
     as section name.
   * **Abstract:** Summary of the question and the findings (max. 200 words).
   * **Introduction:** Description of the question and the data employed to
     answer it. Description of any steps taken, if any, previous to this R
     Markdown document, to prepare the data that is being analyzed.
-  * **Results:** R code interspersed with text, descriping the analysis steps
+  * **Results:** R code interspersed with text, describing the analysis steps
     and the display items with the results, which should consist, **at least**,
     of one table and one plot.
   * **Conclusions:** summary of the findings, limitations of the study, ways in
@@ -66,14 +66,15 @@ The analysis of the data should be carried out at least using R, but you can
 also use shell or Python scripts to transform or prepare the data for the
 analysis with R. If those prior steps using shell or Python scripts are
 included, they should be described in the introduction section of the R
-Markdown document and, ideally, made readily reproducible using a Makefile.
+Markdown document and, ideally, made readily reproducible using a
+[Makefile](https://funcompbio.github.io/lecture10).
 
 ## Submission procedure
 
 This assignment has to be submitted using GitHub Classroom. This
 means that you should have cloned the GitHub repo of this assignment from
-the organization account for FCB in the academic year 2022-23 at
-[https://github.com/funcompbio2022](https://github.com/funcompbio2022)
+the organization account for FCB in the academic year 2023-24 at
+[https://github.com/funcompbio2023](https://github.com/funcompbio2023)
 using the submission link provided at the FCB Moodle site.
 
 To complete your submission (see rubric below) one team member should fill up a
@@ -104,8 +105,9 @@ The rubric to evaluate this project consists of the following items:
 5. Does the introduction explain clearly what is the question addressed, the
    data employed and the number of observations and variables involved?
 
-6. Do the plots show some meaningful summary of the data? Are axes in plots
-   labeled in plain language and large enough to read?
+6. Do the plots and tables show some meaningful summary of the data? Are axes
+   in plots labeled in plain language and large enough to read? Are plots and
+   tables referred to from the main text?
 
 7. Does the R Markdown file `index.Rmd`, and any other additional R Markdown
    file, consists of R code interspersed with Markdown text? Is the code easy

@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        r-version: [4.2]
+        r-version: [4.3]
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -26,23 +26,27 @@ jobs:
         run: Rscript --vanilla -e 'rspm::enable() ; install.packages(c("remotes", "rprojroot", "renv", "desc", "rmarkdown", "knitr"))'
       - name: Install package dependencies
         run: Rscript --vanilla -e 'rspm::enable() ; pkg_deps <- renv::dependencies()$Package ; missing_pkgs <- setdiff(pkg_deps, rownames(installed.packages())) ; if (length(missing_pkgs) > 0) { res <- tryCatch({ install.packages(missing_pkgs) ; TRUE }, error=function(cond) { message(cond) ; return(FALSE) }, warning=function(cond) { message(cond) ; return(FALSE) }) ; if (!res) { stop("\n\n***PROBLEMS INSTALLING PACKAGE DEPENDENCIES*** YOU ARE TRYING\nTO LOAD A PACKAGE THAT DOES NOT EXIST. SEE MESSAGES ABOVE.") } }'
-      - name: Check for index.Rmd
+      - name: Checking for README.md
+        run: RED='\033[0;31m'; NC='\033[0m' ; if [ -e README.md ] ; then exit 0 ;  else { echo -e "${RED}YOU HAVE REMOVED THE FILE README.md AND YOU SHOULD HAVE NOT DONE IT${NC}" ; exit 1 ; } ; fi
+      - name: Checking for academic integrity statement
+        run: RED='\033[0;31m'; NC='\033[0m' ; x=`grep 'The work here submitted' README.md | perl -nae 'print $F[1]'` ; if [ "$x" != [X] ] && [ "$x" != [x] ] ; then { if [ "$x" == [\"X\"] ] || [ "$x" == [\'X\'] ] || [ "$x" == [\"x\"] ] || [ "$x" == [\'x\'] ] ; then echo -e "${RED}DO NOT USE QUOTE CHARACTERS WHEN CHECKING THE ACADEMIC INTEGRITY STATEMENT${NC}" ; else echo -e "${RED}YOU HAVE NOT YET AGREED TO THE ACADEMIC INTEGRITY STATEMENT (SEE README.md FILE)${NC}" ; fi ; exit 1 ; } ; fi
+      - name: Checking for index.Rmd
         run: RED='\033[0;31m'; NC='\033[0m' ; if [ -e index.Rmd ] ; then exit 0 ; else { echo -e "${RED}MISSING FILE index.Rmd${NC}" ; exit 1 ; } ; fi
-      - name: Check for index.html
+      - name: Checking for index.html
         run: RED='\033[0;31m'; NC='\033[0m' ; if [ -e index.html ] || [ -e docs/index.html ] ; then exit 0 ; else { echo -e "${RED}MISSING FILE index.html${NC}" ; exit 1 ; } ; fi
-      - name: Check for setwd() in Rmd files
+      - name: Checking for setwd() in Rmd files
         run: RED='\033[0;31m'; NC='\033[0m' ; nlswd=`grep -n setwd *.Rmd | cut -d ':' -f 1` ; if [ "$nlswd" != "" ] ; then { echo -e "${RED}YOU ARE CALLING setwd() in an .Rmd FILE, PLEASE DO NOT DO IT${NC}" ; exit 1 ; } ; else { exit 0 ; } ; fi
-      - name: Check for the absence of R code
+      - name: Checking for the absence of R code
         run: Rscript -e 'library(knitr) ; fl <- list.files(pattern=".Rmd$") ; n <- 0 ; for (f in fl) { f2 <- purl(f, documentation=0L) ; r <- readLines(f2) ; n <- n + length(r) } ; if (n < 10) { stop("TOO FEW LINES OF R CODE IN RMARKDOWN FILES") }'
-      - name: Check for non-English letters and accents in object names
+      - name: Checking for non-English letters and accents in object names
         run: Rscript -e 'library(knitr) ; fl <- list.files(pattern=".Rmd$") ; n <- 0 ; for (f in fl) { f2 <- purl(f, documentation=0L) ; r <- getParseData(parse(f2, keep.source=TRUE)) ; obj <- unique(r$text[which(r$token == "SYMBOL")]) ; mask <- grepl("[^ -~]", obj) ; if (any(mask)) { stop(sprintf("PLEASE DO NOT USE NON-ENGLISH LETTERS AND ACCENTS IN OBJECT NAMES SUCH AS WITH %s IN FILE %s", paste(obj[mask][1:min(c(3, sum(mask)))], collapse=", "), f)) } }'
-      - name: Check for calls to install packages in Rmd files
+      - name: Checking for calls to install packages in Rmd files
         run: RED='\033[0;31m'; NC='\033[0m' ; nlswd=`grep -n install.packages *.Rmd | cut -d ':' -f 1` ; if [ "$nlswd" != "" ] ; then { echo -e "${RED}YOU ARE CALLING install.packages() in an .Rmd FILE, PLEASE DO NOT DO IT${NC}" ; exit 1 ; } ; else { exit 0 ; } ; fi
-      - name: Render index.html
+      - name: Rendering index.html
         run: if [ -e Makefile ] ; then { echo Makefile found, touching prerequisites ; grep '^[^#[:space:]].*:' Makefile | sed 's/^[^#[:space:]].*:[[:space:]]*//' | sed 's/ /\'$'\n/g' | egrep '\.R|\.Rmd|\.py|\.sh' | xargs touch ; echo Running Makefile ; make ; } ; else { if [ -e _site.yml ] ; then { Rscript -e 'rmarkdown::render_site()' ; } ; else { Rscript -e 'rmarkdown::render("index.Rmd")' ; } ; fi ; } ; fi
-      - name: Check for Makefile, .R or .Rmd files in the docs directory
+      - name: Checking for Makefile, .R or .Rmd files in the docs directory
         run: RED='\033[0;31m'; NC='\033[0m' ; n=`ls -1 docs/Makefile docs/*.R docs/*.Rmd 2> /dev/null | wc -l` ; if [ $n != 0 ] ; then echo -e "${RED}THE docs DIRECTORY MUST HAVE ONLY WEB-RELATED FILES (.html, .css, .png, etc.) AND NOT A Makefile OR R/RMD FILES${NC}" ; exit 1 ; fi
-      - name: Commit results to GitHub repo
+      - name: Commiting results to GitHub repo
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
