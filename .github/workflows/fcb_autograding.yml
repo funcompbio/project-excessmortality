@@ -9,11 +9,11 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        r-version: [4.3]
+        r-version: [4.4]
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up R ${{ matrix.r-version }}
         uses: r-lib/actions/setup-r@v2
         with:
@@ -35,13 +35,17 @@ jobs:
       - name: Checking for index.html
         run: RED='\033[0;31m'; NC='\033[0m' ; if [ -e index.html ] || [ -e docs/index.html ] ; then exit 0 ; else { echo -e "${RED}MISSING FILE index.html${NC}" ; exit 1 ; } ; fi
       - name: Checking for setwd() in Rmd files
-        run: RED='\033[0;31m'; NC='\033[0m' ; nlswd=`grep -n setwd *.Rmd | cut -d ':' -f 1` ; if [ "$nlswd" != "" ] ; then { echo -e "${RED}YOU ARE CALLING setwd() in an .Rmd FILE, PLEASE DO NOT DO IT${NC}" ; exit 1 ; } ; else { exit 0 ; } ; fi
+        run: RED='\033[0;31m'; NC='\033[0m' ; nlswd=`grep -n setwd *.Rmd | cut -d ':' -f 1` ; if [ "$nlswd" != "" ] ; then { echo -e "${RED}YOU ARE CALLING setwd() IN AN .Rmd FILE, PLEASE DO NOT DO IT${NC}" ; exit 1 ; } ; else { exit 0 ; } ; fi
+      - name: Checking for wrong language block definition in Rmd files
+        run: RED='\033[0;31m'; NC='\033[0m' ; nlsR=`grep -n '\`\`\`{R' *.Rmd | cut -d ':' -f 1` ; if [ "$nlsR" != "" ] ; then { echo -e "${RED}YOU ARE USING \`\`\`{R} TO DEFINE R CODE BLOCKS IN AN .Rmd FILE, PLEASE USE LOWERCASE \`\`\`{r}${NC}" ; exit 1 ; } ; else { exit 0 ; } ; fi
       - name: Checking for the absence of R code
         run: Rscript -e 'library(knitr) ; fl <- list.files(pattern=".Rmd$") ; n <- 0 ; for (f in fl) { f2 <- purl(f, documentation=0L) ; r <- readLines(f2) ; n <- n + length(r) } ; if (n < 10) { stop("TOO FEW LINES OF R CODE IN RMARKDOWN FILES") }'
       - name: Checking for non-English letters and accents in object names
         run: Rscript -e 'library(knitr) ; fl <- list.files(pattern=".Rmd$") ; n <- 0 ; for (f in fl) { f2 <- purl(f, documentation=0L) ; r <- getParseData(parse(f2, keep.source=TRUE)) ; obj <- unique(r$text[which(r$token == "SYMBOL")]) ; mask <- grepl("[^ -~]", obj) ; if (any(mask)) { stop(sprintf("PLEASE DO NOT USE NON-ENGLISH LETTERS AND ACCENTS IN OBJECT NAMES SUCH AS WITH %s IN FILE %s", paste(obj[mask][1:min(c(3, sum(mask)))], collapse=", "), f)) } }'
       - name: Checking for calls to install packages in Rmd files
         run: RED='\033[0;31m'; NC='\033[0m' ; nlswd=`grep -n install.packages *.Rmd | cut -d ':' -f 1` ; if [ "$nlswd" != "" ] ; then { echo -e "${RED}YOU ARE CALLING install.packages() in an .Rmd FILE, PLEASE DO NOT DO IT${NC}" ; exit 1 ; } ; else { exit 0 ; } ; fi
+      - name: Checking for lowercase makefile
+        run: RED='\033[0;31m'; NC='\033[0m' ; if [ -e makefile ] ; then { echo -e "${RED}YOU HAVE ADDED A FILE CALLED makefile, WHILE IT MUST BE CALLED Makefile${NC}" ; exit 1 ; } else { exit 0 ; } ; fi
       - name: Rendering index.html
         run: if [ -e Makefile ] ; then { echo Makefile found, touching prerequisites ; grep '^[^#[:space:]].*:' Makefile | sed 's/^[^#[:space:]].*:[[:space:]]*//' | sed 's/ /\'$'\n/g' | egrep '\.R|\.Rmd|\.py|\.sh' | xargs touch ; echo Running Makefile ; make ; } ; else { if [ -e _site.yml ] ; then { Rscript -e 'rmarkdown::render_site()' ; } ; else { Rscript -e 'rmarkdown::render("index.Rmd")' ; } ; fi ; } ; fi
       - name: Checking for Makefile, .R or .Rmd files in the docs directory
